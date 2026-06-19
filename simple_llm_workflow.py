@@ -1,12 +1,10 @@
 # %% Cell 1: Imports
 import os
-from sys import int_info
 from typing import TypedDict
 
 from dotenv import load_dotenv
 from langchain_nvidia_ai_endpoints import ChatNVIDIA
 from langgraph.graph import END, START, StateGraph
-from typing_extensions import final
 
 # %% Cell 2: Load environment variables
 load_dotenv()
@@ -40,4 +38,4 @@ app = graph.compile()
 # %% Cell 6:
 initial_state = {"query": "what is the use of init function in python?"}
 final_state = app.invoke(initial_state)
-print(final_state)
+print(final_state["answer"])
