@@ -4,8 +4,6 @@ import os
 from typing import Annotated, TypedDict
 
 from dotenv import load_dotenv
-from langchain_core import language_models
-from langchain_core.tools import base
 from langchain_nvidia_ai_endpoints import ChatNVIDIA
 from langgraph.graph import END, START, StateGraph
 from pydantic import BaseModel, Field
