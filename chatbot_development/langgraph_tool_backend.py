@@ -11,7 +11,7 @@ from langchain_core.messages import BaseMessage
 from langchain_core.tools import tool
 from langchain_nvidia_ai_endpoints import ChatNVIDIA
 from langgraph.checkpoint.sqlite import SqliteSaver
-from langgraph.graph import START, StateGraph
+from langgraph.graph import START, END, StateGraph
 from langgraph.graph.message import add_messages
 from langgraph.prebuilt import ToolNode, tools_condition
 
@@ -110,7 +110,14 @@ graph.add_node("tools", tool_node)
 
 graph.add_edge(START, "chat_node")
 
-graph.add_conditional_edges("chat_node", tools_condition)
+graph.add_conditional_edges(
+    "chat_node",
+    tools_condition,
+    {
+        "tools": "tools",
+        "__end__": END
+    }
+)
 graph.add_edge("tools", "chat_node")
 
 chatbot = graph.compile(checkpointer=checkpointer)

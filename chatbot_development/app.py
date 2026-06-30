@@ -81,8 +81,8 @@ if user_input:
 
     # Assistant streaming block
     with st.chat_message("assistant"):
-        # Use a mutable holder so the generator can set/modify it
         status_holder = {"box": None}
+        ai_message_parts = []
 
         def ai_only_stream():
             for message_chunk, metadata in chatbot.stream(
@@ -106,9 +106,15 @@ if user_input:
 
                 # Stream ONLY assistant tokens
                 if isinstance(message_chunk, AIMessage):
-                    yield message_chunk.content
+                    content = message_chunk.content
+                    ai_message_parts.append(content)
+                    yield content
 
         ai_message = st.write_stream(ai_only_stream())
+        
+        # If nothing was streamed but we have parts, join them
+        if not ai_message and ai_message_parts:
+            ai_message = "".join(ai_message_parts)
 
         # Finalize only if a tool was actually used
         if status_holder["box"] is not None:
